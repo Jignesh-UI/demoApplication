@@ -1,0 +1,254 @@
+<div class="header">
+  <div class="logo">
+    <img src="assets/images/Hotels_Logo11.jpg" alt="logo" />
+  </div>
+  <ul>
+    <li>
+      <a routerLink="/" routerLinkActive="">HOME</a>
+    </li>
+    <li>
+      <a routerLink="/login" routerLinkActive="">Login</a>
+    </li>
+    <li>
+      <a class="offlink" routerLinkActive="active"> Rooms</a>
+    </li>
+    <li>
+      <a routerLinkActive="active" routerLink="/bookings">
+        Bookings
+      </a>
+    </li>
+    <li>
+      <a class="offlink" routerLinkActive="active">Location</a>
+    </li>
+    <li>
+      <a class="offlink" routerLinkActive="active">Gallery </a>
+    </li>
+    <li>
+      <a routerLink="/apidemo" routerLinkActive="active">API Demo</a>
+    </li>
+    <li>
+      <a routerLink="/SQSFlow" routerLinkActive="active">SQSFlow</a>
+    </li>
+  </ul>
+
+  <div class="profile">
+    <div class="bell">
+      <img src="assets/images/bell.png" alt="bell" (click)="expandCollapseNotification()" />
+      <span class="bellcounter">{{ns.notifyLength}} </span>
+    </div>
+    <div class="profile-pic">
+      <img src="assets/images/profileimage.jpg" alt="logo" />
+    </div>
+    <div class="profile-name">
+      <div class="name"> {{currentUser?.username}}</div>
+      <div class="dept logout" (click)="logout()">Logout</div>
+    </div>
+  </div>
+
+  <div class="notificationSection overlay" *ngIf="showNotification">
+    <div class="notificationOverview">
+      <span class="closeNotifiationIcon" (click)="expandCollapseNotification()"></span>
+      <h3 class="notificationsHeading"> Notifications</h3>
+    </div>
+    <div class="notificationItems">
+      <ul>
+        <li class="notificationItem" *ngFor="let nty of ns.notifications;  let i = index;">
+          <span class="circle grey"></span>
+          <div class="title"> {{nty.Body}} </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+<!--
+
+  const AWS = require('aws-sdk');
+const dynamoDB = new AWS.DynamoDB.DocumentClient();
+AWS.config.update({ region: 'us-east-1' });
+const queueURL = "https://sqs.us-east-1.amazonaws.com/509884965781/DemoQueue";
+const sqs = new AWS.SQS({ apiVersion: '2012-11-05' });
+
+exports.handler = async (event) => {
+
+  try {
+    // console.log("*****");
+    // console.log(JSON.stringify(event));
+    // console.log("*****");
+
+// const data = await receiveMessages();
+
+// data.Messages.forEach((message, index) => {
+//     console.log(`====== Message ${index + 1}:`, message.Body);
+//     // Call deleteMessage function after processing the message
+//     deleteMessage(message.ReceiptHandle);
+// });
+
+
+
+    if (event.requestContext.http.method == "POST") {
+
+      const { itemid, itemname, itemquantity } = JSON.parse(event.body);
+
+      await updateItemsTable(itemid, itemquantity);
+      const response = {
+        statusCode: 200,
+        body: JSON.stringify('Data Updated Successfully!'),
+      };
+
+      await sendSQSNotification(itemid, itemname, itemquantity);
+
+      return response;
+
+    } else {
+      return await listItemsTable();
+    }
+
+
+
+
+
+  }
+  catch (err) {
+    console.error("Error:", err);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: 'Something Went Wrong!' }),
+    };
+  }
+
+  // // TODO implement
+  // const response = {
+  //   statusCode: 200,
+  //   body: JSON.stringify('Hello from Lambda!'),
+  // };
+  // return response;
+};
+
+async function listItemsTable() {
+  const params = {
+    TableName: 'demoItemsMaster'
+  };
+
+  const data = await dynamoDB.scan(params).promise();
+  console.log("Data:", data);
+
+  return {
+    statusCode: 200,
+    body: { data: data.Items, message: "successful" }
+  };
+
+}
+
+async function updateItemsTable(itemid, itemquantity) {
+  const params = {
+    TableName: 'demoItemsMaster',
+    Key: {
+      itemid: itemid.toString()
+    },
+    UpdateExpression: 'SET #itemquantity = :itemquantity',
+    ExpressionAttributeNames: {
+      '#itemquantity': 'itemquantity',
+    },
+    ExpressionAttributeValues: {
+      ':itemquantity': itemquantity
+    },
+    ReturnValues: 'UPDATED_NEW'
+  };
+
+
+  try {
+    const updateItemQty = await dynamoDB.update(params).promise();
+    console.log("Update Item Quantity:", updateItemQty);
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: 'Item quantity updated successfully',
+        updatedAttributes: updateItemQty.Attributes
+      })
+    };
+  } catch (error) {
+    console.error("Error updating item quantity:", error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: 'Failed to update item quantity', error: error.message })
+    };
+  }
+
+
+}
+
+
+
+const sendSQSNotification = async (itemid, itemname, itemquantity) =>{
+  const queueUrl = "https://sqs.us-east-1.amazonaws.com/509884965781/DemoQueue";
+
+  const messageBody = `${itemquantity} ${itemname}s are added`;
+  const params = {
+    MessageBody: messageBody,
+    QueueUrl: queueUrl,
+    DelaySeconds:3
+  };
+
+  try{
+    const data = await sqs.sendMessage(params).promise();
+    console.log("Message Successfully Sent!", data);
+  }catch(e){
+    console.log(e);
+  }
+
+};
+
+
+
+const receiveMessages = async () => {
+  // Specify the queue URL
+    const params = {
+        QueueUrl: queueURL,
+        MaxNumberOfMessages: 10, // How many messages do you want to retrieve at once (1-10)
+        VisibilityTimeout: 30, // The duration (in seconds) that the received messages are hidden from subsequent retrieve requests after being retrieved by a ReceiveMessage request
+        WaitTimeSeconds: 20 // Long polling
+    };
+
+    try {
+        const data = await sqs.receiveMessage(params).promise();
+        console.log("data");
+        // console.log(data);
+        console.log(JSON.stringify(data));
+        if (data.Messages) {
+            // console.log("Received messages:");
+            data.Messages.forEach((message, index) => {
+                console.log(`Message ${index + 1}:`, message.Body);
+
+                // More processing here (e.g., delete message after processing)
+            });
+        } else {
+            console.log("No messages received");
+        }
+        return data;
+    } catch (err) {
+        console.error("Error in receiving messages:", err);
+    }
+};
+
+const deleteMessage = async (receiptHandle) => {
+  console.log(receiptHandle);
+  console.log("++++++++++++");
+  console.log(JSON.stringify(receiptHandle));
+
+    const deleteParams = {
+        QueueUrl: queueURL,
+        ReceiptHandle: receiptHandle
+    };
+
+    try {
+        const data = await sqs.deleteMessage(deleteParams).promise();
+        console.log("Message Deleted", data);
+    } catch (err) {
+        console.error("Delete Error", err);
+    }
+};
+
+
+ -->
+
+</div>

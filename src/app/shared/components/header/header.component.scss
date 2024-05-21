@@ -1,0 +1,208 @@
+.header {
+  background: #f1f1f1;
+  margin: 0 0;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+.header ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+}
+.header ul li {
+  padding: 10px;
+  margin: 0;
+}
+.header ul li a {
+  display: block;
+  text-decoration: none;
+  display: block;
+  text-decoration: none;
+  color: #000;
+  font-family: Lato;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+.header ul li a:hover {
+  color: #000;
+}
+
+.header .profile-pic {
+  width: 54px;
+  height: 54px;
+}
+
+.header .profile-pic img {
+  border: 3px solid lightgray;
+  border-radius: 50%;
+}
+
+.header .profile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: right;
+  gap: 20px;
+  color: #0f0f0f;
+  text-transform: capitalize;
+  text-align: right;
+  font-family: Jost;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.42px;
+}
+.header .profile .dept {
+  color: #1e1e1e;
+
+  text-align: right;
+  font-family: Jost;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.36px;
+}
+
+.profile-name .name {
+  font-size: 16px;
+  text-transform: capitalize;
+}
+
+.header ul li a.active {
+  color: #6c428b;
+  text-decoration: overline;
+}
+.header ul li a.offlink {
+  color: #666;
+  cursor: default;
+}
+
+.bell {
+  position: relative;
+  cursor: pointer;
+}
+.bellcounter {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  text-align: center;
+  background: #800049;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 15px;
+  border-radius: 50%;
+  position: absolute;
+  top: -10px;
+  right: -6px;
+  z-index: 1;
+}
+.notificationOverview {
+  background: #075b81;
+  padding: 15px 25px 30px;
+  display: flex;
+  flex-direction: column;
+  color: #ffffff;
+  justify-content: center;
+  align-items: stretch;
+}
+.notificationItem.unread {
+  background: #f1f1f4;
+  border-left: 6px solid #075b81;
+}
+.notificationSection {
+  width: 300px;
+  max-width: 300px;
+  right: 0;
+  position: fixed;
+  box-shadow: 10px 2px 25px 0 rgba(0, 0, 0, 0.5);
+  z-index: 1001;
+  visibility: hidden;
+}
+.notificationSection.overlay {
+  transition: 0.5s;
+  -webkit-transition: 0.5s;
+  position: absolute;
+  right: 0;
+  top: 0;
+  min-height: 140%;
+  height: 140%;
+  z-index: 1001;
+  display: block;
+  background: #ffffff;
+  visibility: visible;
+}
+.notificationSection.overlay .notificationItems ul {
+  height: auto;
+  overflow: hidden auto;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  scrollbar-width: thin;
+  scrollbar-color: #f1f1f4 rgba(152, 152, 150, 0.34);
+  flex-direction: column;
+}
+.notificationsHeading {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffffff;
+  line-height: normal;
+  margin: 0px;
+  text-align: center;
+}
+.notificationSection .notificationItem {
+  display: flex;
+  align-items: flex-start;
+  padding: 20px 20px;
+  border-bottom: solid 1px #989896;
+  flex-direction: column;
+  position: relative;
+}
+.closeNotifiationIcon {
+  cursor: pointer;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  text-decoration: none;
+  width: 28px;
+  height: 28px;
+  position: absolute;
+}
+.closeNotifiationIcon::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 7px;
+  width: 7px;
+  height: 7px;
+  border-top: 3px solid #ffffff;
+  border-right: 3px solid #ffffff;
+  transform: rotate(45deg);
+}
+.closeNotifiationIcon::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 7px;
+  width: 7px;
+  height: 7px;
+  border-left: 3px solid #ffffff;
+  border-bottom: 3px solid #ffffff;
+  transform: rotate(45deg);
+}
+
+.header .profile .dept.logout{
+  text-decoration: underline;
+  text-align: left;
+  cursor: pointer;
+}

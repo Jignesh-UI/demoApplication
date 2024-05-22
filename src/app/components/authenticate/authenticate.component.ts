@@ -18,6 +18,8 @@ export class AuthenticateComponent {
 
   showSignUp:boolean=true;
   showAuthenticateWindow:boolean=true;
+  errMessage:string = '';
+  showLoading:boolean = false;
 
   constructor(private cognitoService: CognitoService, private router:Router){
 
@@ -26,49 +28,55 @@ export class AuthenticateComponent {
 
   login(param:any){
     console.log(param.value);
+    this.errMessage ='';
+    this.showLoading = true;
     this.cognitoService.authenticate(param.value.username, param.value.password).then(session => {
-      console.log('222 Login Successfull:', session);
+      // console.log(session);
       this.router.navigate(['/apidemo']);
+      this.showLoading = false;
     }).catch(err => {
-      console.log('111 Login Failed', err);
+      this.errMessage = err;
+      this.showLoading = false;
     })
   }
 
   signup(param:any){
-    // console.log(param.value);
-    // console.log(param.value.username);
-    // console.log(param.value.useremail);
-    // console.log(param.value.password);
+    this.showLoading = true;
+    this.cognitoService.register(param.value.username, param.value.password, param.value.useremail).then(user => {
+      console.log('333 user registered', user);
+      this.showAuthenticateWindow = !this.showAuthenticateWindow;
+      this.showLoading = false;
+    }).catch((err)=>{
+      console.log('444 Registration Failed', err);
+      if(err.code === "InvalidParameterException"){
+        console.log("User name does not match with criteria!");
+      }else if(err.code === "InvalidPasswordException"){
+        console.log("Password does not match with criteria!");
+      }
+      this.showLoading = false;
+    });
+  }
 
-      this.cognitoService.register(param.value.username, param.value.password, param.value.useremail).then(user => {
-        console.log('333 user registered', user);
-        this.showAuthenticateWindow = !this.showAuthenticateWindow;
-      }).catch((err)=>{
-        console.log('444 Registration Failed', err);
-        if(err.code === "InvalidParameterException"){
-          console.log("User name does not match with criteria!");
-        }else if(err.code === "InvalidPasswordException"){
-          console.log("Password does not match with criteria!");
-        }
-      });
-    }
-
-    confirmUser(param:any){
-      const userName:string = param.value.username;
-      const validationCode:string = param.value.validationCode;
-
-      this.cognitoService.confirmUser(userName,validationCode).then(()=>{
-        console.log("555 Verified");
-        this.router.navigate(['/login']);
-      }).catch(err => {
-        console.log("666 Varification Failed!");
-      });
-    }
-
-    logout(){
-      this.cognitoService.logout();
+  confirmUser(param:any){
+    const userName:string = param.value.username;
+    const validationCode:string = param.value.validationCode;
+    this.showLoading = true;
+    this.cognitoService.confirmUser(userName,validationCode).then(()=>{
+      console.log("555 Verified");
+      this.showLoading = false;
       this.router.navigate(['/login']);
-    }
+    }).catch(err => {
+      this.showLoading = false;
+      console.log("666 Varification Failed!");
+    });
+  }
+
+  logout(){
+    this.cognitoService.logout();
+    this.router.navigate(['/login']);
+  }
+
+
 
   }
 

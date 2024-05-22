@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NotifyService } from 'src/app/shared/services/notify.service';
+import { CognitoService } from 'src/app/shared/services/cognito.service';
 
 @Component({
   selector: 'app-sqsflow',
@@ -14,7 +15,7 @@ export class SqsflowComponent implements OnInit {
 
   qty:any;
 
-  constructor(private http: HttpClient, private ns: NotifyService) {
+  constructor(private http: HttpClient, private ns: NotifyService, private cognitoService: CognitoService) {
   }
 
   async ngOnInit() {
@@ -23,18 +24,30 @@ export class SqsflowComponent implements OnInit {
 
   async loadData(){
     this.showLoading = true;
-    this.http.get(this.fetchDBurl).subscribe((sdata:any) => {
-      console.log(sdata.data);
-      this.itemsMaster.push(sdata.data);
-      console.log(this.itemsMaster);
+    this.cognitoService.getAuthenticatedUser()?.getSession((err: any,session: any) => {
+      if(err){
+        console.log(err);
+        this.showLoading = false;
+        return;
+      }
+    const requestToken = session.getIdToken().getJwtToken()
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `${requestToken}`
+    });
+    this.http.get("https://3eg5qzfgfi.execute-api.us-east-1.amazonaws.com/dev/demoAPI/all",{headers:header}).subscribe((sdata:any) => {
+      console.log(sdata);
+      this.itemsMaster.push(sdata.body.data);
+      // console.log(this.itemsMaster);
       this.showLoading = false;
-    })
+    });
+  });
+
   }
 
   async updateItemsQty(itemid: number, itemname: string, itemquantity: number){
-    // console.log(itemid);
-    // console.log(itemname);
-    // console.log(itemquantity);
+
+
     this.showLoading = true;
     const params = {
       itemid: itemid,
@@ -57,11 +70,9 @@ export class SqsflowComponent implements OnInit {
   }
 
   async getNotifications(){
+    this.showLoading = true;
     await this.ns.getNotifications();
-  }
-
-  async updateItemsQty1(){
-
+    this.showLoading = false;
   }
 
 }

@@ -1,3 +1,5 @@
+<app-loading *ngIf="showLoading"></app-loading>
+
 <div *ngIf="!showSignUp">
   <h1>SignUp <button class="btnlogin" type="button" (click)="showSignUp= !showSignUp" >Switch to Login</button> </h1>
 
@@ -61,7 +63,8 @@
             <input placeholder="password" class="form-control" type="password" required  [(ngModel)]="userpassword"  name="password">
           </div>
           <div class="frmrow buttonBox">
-            <button class="btnlogin" [disabled]="myForm1.invalid"  type="submit">Login</button>
+            <button class="btnlogin" [disabled]="myForm1.invalid" type="submit">Login</button>
+            <div class="errMessage" *ngIf="errMessage.length > 0 ">{{errMessage}}</div>
           </div>
         </div>
     </form>

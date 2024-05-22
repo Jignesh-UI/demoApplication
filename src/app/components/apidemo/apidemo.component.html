@@ -1,38 +1,44 @@
+<app-loading *ngIf="showLoading"></app-loading>
 <div class="bookingWrapper">
 <h1>Insert Data</h1>
 <form #arcForm="ngForm">
 
-  <div *ngIf="message" class="message">
-    {{message}}
-  </div>
+  <table class="tblflows" cellPadding="0" cellSpacing="15">
+    <thead>
+      <tr>
+        <th>Item Name</th>
+        <th>Quantity</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input type="text" class="txtqty" name="txtitemname"  [(ngModel)]="itemname" #itemname1 /></td>
+        <td>
+          <input type="number" class="txtqty" name="txtqty"  [(ngModel)]="itemquantity" #itemqty />
+        </td>
+        <td class="centerItem">
+          <button
+          type="button"
+          class="btn"
+            (click)="addItems(itemname1.value, +itemqty.value)"
+            >
+            Add Item
+          </button>
+        </td>
+      </tr>
 
-<table class="tblflows" cellPadding="0" cellSpacing="15">
-  <thead>
-    <tr>
-      <th>Item Name</th>
-      <th>Quantity</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><input type="text" class="txtqty" name="txtitemname"  [(ngModel)]="itemname" #itemname1 /></td>
-      <td>
-        <input type="number" class="txtqty" name="txtqty"  [(ngModel)]="itemquantity" #itemqty />
-      </td>
-      <td class="centerItem">
-        <button
-        type="button"
-        class="btn"
-          (click)="addItems(itemname1.value, +itemqty.value)"
-          >
-          Add Item
-        </button>
-      </td>
-    </tr>
+      <tr *ngIf="message">
+        <td colspan="3">
+          <div class="message">
+            {{message}}
+          </div>
 
-  </tbody>
-</table>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
 
 </form>
 

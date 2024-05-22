@@ -97,3 +97,11 @@ h1{
     background-color: #0d6efd;
     border-color: #0d6efd;
 }
+
+.errMessage {
+  padding: 5px 10px;
+  color: #f00;
+  background: rgba(0,0,0,0.1);
+  border-radius: 5px;
+  font-weight: bold;
+}

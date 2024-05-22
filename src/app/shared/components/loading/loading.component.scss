@@ -1,7 +1,18 @@
+.loadingContainer{
+  position: absolute;
+  width: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1;
+  height: 100%;
+  left: 0;
+  top: 80px;
+  padding: 0;
+  margin: 0;
+}
 .loadingWrapper {
   position: absolute;
   left: 45%;
-  top: 0px;
+  top: 45%;
   background: rgba(0,0,0,0.1);
   padding: 10px;
   border-radius: 5px;

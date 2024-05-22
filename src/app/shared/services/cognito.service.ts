@@ -28,11 +28,11 @@ export class CognitoService {
       return new Promise((resolve,reject)=> {
         this.userPool.signUp(username, password, attributeList,[],(err,result)=>{
           if(err){
-            console.log("+++ User Not Registered")
+            // console.log("+++ User Not Registered")
             reject(err);
           }else{
-            console.log(result);
-            console.log("+++ User Registered")
+            // console.log(result);
+            // console.log("+++ User Registered")
             this.registeredUser = result?.user;
             resolve(result?.user);
           }
@@ -50,12 +50,12 @@ export class CognitoService {
       return new Promise((resolve,reject)=>{
         cognitoUser.confirmRegistration(validationCode,true,(err,result)=>{
           if (err) {
-            console.log("+++ User Confirmed")
-            console.log("Authentication Failed!");
+            // console.log("+++ User Confirmed")
+            // console.log("Authentication Failed!");
             reject(err);
         } else {
-            console.log("--- User Not Confirmed")
-            console.log("Authentication Successfull!");
+            // console.log("--- User Not Confirmed")
+            // console.log("Authentication Successfull!");
             resolve(result); // 'SUCCESS'
         }
         })
@@ -82,7 +82,7 @@ export class CognitoService {
          onFailure:(err)=>{
           console.log("--- Authentication Failed")
           console.log(err);
-           reject(err);
+           reject(err.message);
          }
        });
      });
@@ -97,6 +97,14 @@ export class CognitoService {
 
    getAuthenticatedUser(){
     return this.userPool.getCurrentUser();
+   }
+
+   isAuthenticated(){
+    const user = this.userPool.getCurrentUser();
+    if(user){
+      return true
+    }
+    return false;
    }
 
 

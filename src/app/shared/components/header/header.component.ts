@@ -17,10 +17,7 @@ export class HeaderComponent implements OnInit {
 
   constructor(public ns: NotifyService,private cognitoService: CognitoService, private router:Router){
     this.nlength = ns.notifyLength;
-    console.log(ns.notifyLength);
     this.currentUser = cognitoService.getAuthenticatedUser();
-    console.log(this.currentUser);
-    // this.currentUser.username = '';
 
   }
 

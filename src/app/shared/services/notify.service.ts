@@ -12,7 +12,7 @@ export class NotifyService {
   constructor(private http: HttpClient) { }
 
   async getNotifications(){
-    console.log("notification function from service");
+    // console.log("notification function from service");
     const notificationURL = "https://dqnlczmotihntutd3dv4dcleri0dfxzc.lambda-url.us-east-1.on.aws/";
     this.http.get(notificationURL).subscribe((response:any)=>{
 
@@ -28,10 +28,7 @@ export class NotifyService {
         this.notifications = [...this.notifications, response.data[0]];
       }
 
-      // console.log(response);
-      // console.log(response.data);
-      // console.log(response.data.length);
-      console.log(this.notifications);
+      // console.log(this.notifications);
     }, err =>{
       console.log(err)
     })

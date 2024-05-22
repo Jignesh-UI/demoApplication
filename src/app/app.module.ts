@@ -6,10 +6,7 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { RoomsComponent } from './components/rooms/rooms.component';
 import { BookingsComponent } from './components/bookings/bookings.component';
-import { LocationComponent } from './components/location/location.component';
-import { GalleryComponent } from './components/gallery/gallery.component';
 import { SqsflowComponent } from './components/sqsflow/sqsflow.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -24,10 +21,7 @@ import { AuthenticateComponent } from './components/authenticate/authenticate.co
     HeaderComponent,
     FooterComponent,
     DashboardComponent,
-    RoomsComponent,
     BookingsComponent,
-    LocationComponent,
-    GalleryComponent,
     SqsflowComponent,
     LoadingComponent,
     ApidemoComponent,
